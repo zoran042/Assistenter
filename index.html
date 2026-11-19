@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1e5b57">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<title>Mina assistenter</title>
+<style>
+:root{--bg:#f2f4f3;--card:#fff;--fg:#162120;--muted:#5d6b69;--line:#d9e0de;--acc:#1e5b57;--soft:#e1efed;--red:#b83a2e;--on:#fff;--r:16px}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1514;--card:#182120;--fg:#e6eeec;--muted:#98a8a5;--line:#283432;--acc:#74c6bb;--soft:#1b3330;--red:#ff8f80;--on:#0f1514}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:0 0 96px}
+main{max-width:680px;margin:0 auto;padding:12px 16px 24px;display:flex;flex-direction:column;gap:14px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 16px 8px;max-width:680px;margin:0 auto}
+h1{font-size:1.5rem;margin:0;letter-spacing:-.01em}
+h2{font-size:1.12rem;margin:0}
+h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:4px 0 0}
+p{margin:0}
+.sub{color:var(--muted);font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
+.hl{border:2px solid var(--acc)}
+.warn{border:2px solid var(--red)}
+.warn h2{color:var(--red)}
+nav.bar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--card);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom));display:flex;justify-content:center}
+nav.bar .in{display:flex;gap:2px;overflow-x:auto;max-width:680px;width:100%;scrollbar-width:none}
+nav.bar button{flex:1 0 auto;min-width:64px;font:inherit;font-size:.72rem;font-weight:600;color:var(--muted);background:none;border:0;border-radius:12px;padding:6px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+nav.bar button svg{width:24px;height:24px}
+nav.bar button[aria-current=true]{color:var(--acc);background:var(--soft)}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.chips button{flex:0 0 auto;font:inherit;font-weight:700;font-size:.92rem;padding:8px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+.chips button[aria-selected=true]{background:var(--acc);color:var(--on);border-color:var(--acc)}
+label{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:.93rem}
+textarea,input,select{font:inherit;font-weight:400;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);width:100%;min-width:0}
+textarea{min-height:84px;resize:vertical}
+input[type=range]{padding:0}
+.btn{font:inherit;font-weight:700;padding:12px 16px;border-radius:12px;border:0;background:var(--acc);color:var(--on);cursor:pointer;text-align:center;text-decoration:none;display:inline-block}
+.alt{font:inherit;font-weight:700;padding:11px 14px;border-radius:12px;border:1px solid var(--acc);background:transparent;color:var(--acc);cursor:pointer;text-align:center;text-decoration:none;display:inline-block}
+.small{font-size:.85rem;padding:7px 10px;border-radius:10px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.note{font-size:.86rem;color:var(--muted)}
+.ok{color:var(--acc);font-weight:700}
+ul.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+ul.list li{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+ul.list li:first-child{border-top:0;padding-top:2px}
+ul.list .t{flex:1;min-width:0;overflow-wrap:anywhere}
+ul.list .d{display:block;font-size:.84rem;color:var(--muted)}
+ul.list input[type=checkbox]{width:22px;height:22px;flex:0 0 22px;margin-top:2px;accent-color:var(--acc)}
+.x{font:inherit;font-size:1.1rem;line-height:1;background:none;border:0;color:var(--muted);cursor:pointer;padding:2px 6px}
+.ic{font:inherit;font-size:.8rem;font-weight:700;background:var(--soft);color:var(--fg);border:0;border-radius:8px;padding:5px 8px;cursor:pointer;white-space:nowrap}
+.due{color:var(--red);font-weight:700}
+.tile{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);cursor:pointer;font:inherit;color:inherit;text-align:left;width:100%}
+.tile .em{width:42px;height:42px;border-radius:12px;background:var(--soft);display:grid;place-items:center;flex:0 0 42px;color:var(--acc)}
+.tile .em svg{width:24px;height:24px}
+.tile b{display:block}
+.tile span{font-size:.85rem;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:380px){.tiles{grid-template-columns:1fr}}
+.theme{font-size:.8rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
+.big{font-size:1.25rem;font-weight:800;line-height:1.3}
+.num{font-size:2rem;font-weight:800;text-align:center}
+.entry{border-top:1px solid var(--line);padding-top:10px;display:flex;flex-direction:column;gap:3px}
+.entry:first-child{border-top:0;padding-top:0}
+.entry p{font-size:.94rem;white-space:pre-wrap}
+details summary{cursor:pointer;font-weight:700;color:var(--acc)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;z-index:9;max-width:90vw;text-align:center}
+[hidden]{display:none!important}
+ol.steps{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+</style>
+</head>
+<body>
+<header><h1 id="title">Mina assistenter</h1><p class="sub" id="today"></p></header>
+<main id="app"></main>
+<nav class="bar"><div class="in" id="nav"></div></nav>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ===== Ikoner ===== */
+const I={
+hem:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
+smh:'<path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/>',
+kal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+bil:'<path d="M5 16l1.5-5h11L19 16"/><rect x="3" y="16" width="18" height="4" rx="1"/><circle cx="7.5" cy="20" r="1.2"/><circle cx="16.5" cy="20" r="1.2"/>',
+hus:'<path d="M3 12l9-8 9 8"/><path d="M6 10v10h5v-5h2v5h5V10"/>',
+barn:'<circle cx="12" cy="7" r="3"/><path d="M6 21c0-4 3-7 6-7s6 3 6 7"/>',
+mejl:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+kop:'<path d="M5 7h14l-1.5 9h-11z"/><path d="M9 7a3 3 0 0 1 6 0"/>',
+mer:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'};
+const svg=k=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+I[k]+'</svg>';
+
+/* ===== Lagring (allt stannar i telefonen) ===== */
+const KEY="za-data";
+const EMPTY={namn:{jag:"",partner:"",barn1:"",barn2:""},omr:{bilar:{fakta:[],todo:[]},bostad:{fakta:[],todo:[]},barn:{fakta:[],todo:[]},arenden:{fakta:[],todo:[]}},kontakter:[],onskelista:[],logg:[],stopp:[]};
+let D=load();
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d)return merge(structuredClone(EMPTY),d)}catch(_){}
+  // flytta in loggar från första versionen av Småhandlingar
+  const d=structuredClone(EMPTY);try{d.logg=JSON.parse(localStorage.getItem("logg"))||[];d.stopp=JSON.parse(localStorage.getItem("stopp"))||[]}catch(_){}return d}
+function merge(a,b){for(const k in b){if(b[k]&&typeof b[k]==="object"&&!Array.isArray(b[k])&&a[k]&&typeof a[k]==="object"&&!Array.isArray(a[k]))merge(a[k],b[k]);else a[k]=b[k]}return a}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(_){toast("Kunde inte spara i telefonen.")}}
+const uid=()=>Math.random().toString(36).slice(2,9);
+
+/* ===== Hjälpare ===== */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const now=new Date(), TODAY=iso(now);
+const fmtDate=s=>{if(!s)return"";const d=new Date(s+"T12:00");return d.toLocaleDateString("sv-SE",{weekday:"short",day:"numeric",month:"short"})};
+const daysTo=s=>Math.round((new Date(s+"T12:00")-new Date(TODAY+"T12:00"))/864e5);
+const N=k=>D.namn[k]||({jag:"jag",partner:"min partner",barn1:"äldsta barnet",barn2:"yngsta barnet"}[k]);
+function toast(t){const e=$("toast");e.textContent=t;e.hidden=false;clearTimeout(e._t);e._t=setTimeout(()=>e.hidden=true,2600)}
+async function copy(t){try{await navigator.clipboard.writeText(t);return true}catch(_){const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);a.select();let ok=false;try{ok=document.execCommand("copy")}catch(_){}a.remove();return ok}}
+async function gemini(prompt){await copy(prompt);toast("Kopierat ? klistra in i Gemini");setTimeout(()=>{location.href="https://gemini.google.com/app"},700)}
+function gcal(title,date,time,details,dur){ // Google Kalender-länk
+  const p=new URLSearchParams({action:"TEMPLATE",text:title,details:details||"",ctz:"Europe/Stockholm"});
+  if(!date){const t=new Date();t.setDate(t.getDate()+1);date=iso(t)}
+  const d=date.replace(/-/g,"");
+  if(time){const [h,m]=time.split(":").map(Number);const e=new Date(2000,0,1,h,m+(dur||60));
+    p.set("dates",d+"T"+time.replace(":","")+"00/"+d+"T"+String(e.getHours()).padStart(2,"0")+String(e.getMinutes()).padStart(2,"0")+"00")}
+  else{const n=new Date(date+"T12:00");n.setDate(n.getDate()+1);p.set("dates",d+"/"+iso(n).replace(/-/g,""))}
+  return "https://calendar.google.com/calendar/render?"+p.toString()}
+
+/* ===== Sidor ===== */
+const PAGES=[
+ {id:"hem",n:"Hem",i:"hem"},
+ {id:"smh",n:"Småhandl.",i:"smh"},
+ {id:"kal",n:"Kalender",i:"kal"},
+ {id:"bilar",n:"Bilarna",i:"bil"},
+ {id:"bostad",n:"Bostad",i:"hus"},
+ {id:"barn",n:"Barn",i:"barn"},
+ {id:"mejl",n:"Mejl",i:"mejl"},
+ {id:"kop",n:"Köp",i:"kop"},
+ {id:"mer",n:"Mer",i:"mer"}];
+const AREA={bilar:{t:"Bilarna",ex:"t.ex. Byt torkarblad på Volvon före jul"},bostad:{t:"Bostad & stuga",ex:"t.ex. Beställ 2 m³ ved till stugan"},barn:{t:"Barn & förskola",ex:"t.ex. Ta med regnkläder till förskolan på fredag"},arenden:{t:"Övriga ärenden",ex:"t.ex. Ring försäkringskassan om ..."}};
+let page=location.hash.slice(1)||"hem";
+function go(p){page=p;history.replaceState(null,"","#"+p);render();window.scrollTo(0,0)}
+function renderNav(){$("nav").innerHTML=PAGES.map(p=>`<button data-p="${p.id}" aria-current="${p.id===page}">${svg(p.i)}${p.n}</button>`).join("");
+  $("nav").querySelectorAll("button").forEach(b=>b.onclick=()=>go(b.dataset.p))}
+function render(){renderNav();const P=PAGES.find(p=>p.id===page)||PAGES[0];
+  $("title").textContent=page==="hem"?"Mina assistenter":(AREA[page]?.t||P.n.replace("Småhandl.","Småhandlingar"));
+  $("today").textContent=now.toLocaleDateString("sv-SE",{weekday:"long",day:"numeric",month:"long"});
+  const f={hem:pHem,smh:pSmh,kal:pKal,bilar:()=>pArea("bilar"),bostad:()=>pArea("bostad"),barn:()=>pArea("barn"),mejl:pMejl,kop:pKop,mer:pMer}[page]||pHem;
+  $("app").innerHTML="";f($("app"))}
+function h(html){const t=document.createElement("template");t.innerHTML=html.trim();return t.content.firstElementChild}
+
+/* ===== Hem ===== */
+function allTodos(){const out=[];for(const a in D.omr)D.omr[a].todo.forEach(t=>{if(!t.klar)out.push({...t,omr:a})});return out}
+function pHem(app){
+  if(!D.namn.jag){app.appendChild(h(`<div class="card hl"><h2>Välkommen</h2><p>Hämta in din fil med dina uppgifter så fylls allt i. Den ligger bara i den här telefonen.</p><button class="btn" id="goImp">Hämta in min fil</button></div>`));$("goImp").onclick=()=>go("mer")}
+  const ex=smhToday();
+  app.appendChild(h(`<button class="card hl" style="text-align:left;font:inherit;color:inherit;cursor:pointer" id="hSmh"><span class="theme">Småhandlingar · ${esc(ex.theme)}</span><span class="big">${esc(ex.ex)}</span></button>`));$("hSmh").onclick=()=>go("smh");
+  const td=allTodos().filter(t=>t.datum).sort((a,b)=>(a.datum+(a.tid||"")).localeCompare(b.datum+(b.tid||""))).filter(t=>daysTo(t.datum)<=14);
+  const nd=allTodos().filter(t=>!t.datum).slice(0,6);
+  const c=h(`<div class="card"><h2>Kommande två veckor</h2><ul class="list" id="hList"></ul></div>`);app.appendChild(c);
+  const ul=c.querySelector("#hList");
+  if(!td.length&&!nd.length)ul.innerHTML='<li class="note">Inget inlagt. Lägg till under Bilarna, Bostad, Barn eller Mer.</li>';
+  [...td,...nd].forEach(t=>ul.appendChild(todoLi(t.omr,t,true)));
+  app.appendChild(h(`<div class="tiles">
+    ${tile("kal","kal","Fota kalendern","Gemini läser av")}
+    ${tile("mejl","mejl","Skriv ett mejl","Prata in, få utkast")}
+    ${tile("bilar","bil","Bilarna","Påminnelser och fakta")}
+    ${tile("bostad","hus","Bostad & stuga","Lån, stuga, el")}
+    ${tile("barn","barn","Barn & förskola","Tider och kontakter")}
+    ${tile("kop","kop","Köp & bevakningar","Önskelista")}</div>`));
+  app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
+}
+const tile=(p,i,t,s)=>`<button class="tile" data-go="${p}"><span class="em">${svg(i)}</span><span><b>${t}</b><span>${s}</span></span></button>`;
+
+/* ===== Att göra (gemensamt) ===== */
+function todoLi(area,t,showArea){
+  const li=document.createElement("li");const d=t.datum?daysTo(t.datum):null;
+  const when=t.datum?`<span class="d ${d!==null&&d<=1?"due":""}">${d===0?"I dag":d===1?"I morgon":fmtDate(t.datum)}${t.tid?" "+t.tid:""}${showArea?" · "+(AREA[area]?.t||area):""}</span>`:(showArea?`<span class="d">${AREA[area]?.t||area}</span>`:"");
+  li.innerHTML=`<input type="checkbox" aria-label="Klar"><span class="t">${esc(t.text)}${when}</span><a class="ic" target="_blank" rel="noopener">+ Kalender</a><button class="x" aria-label="Ta bort">×</button>`;
+  li.querySelector("a").href=gcal(t.text,t.datum,t.tid,(AREA[area]?.t||"")+" ? från Mina assistenter");
+  li.querySelector("input").onchange=()=>{t0(area,t.id).klar=true;save();toast("Bra jobbat!");render()};
+  li.querySelector(".x").onclick=()=>{if(confirm("Ta bort?")){const A=D.omr[area].todo;A.splice(A.findIndex(x=>x.id===t.id),1);save();render()}};
+  return li}
+const t0=(a,id)=>D.omr[a].todo.find(x=>x.id===id);
+
+/* ===== Område: Bilar, Bostad, Barn ===== */
+function pArea(a,app){app=app||$("app");const O=D.omr[a];
+  const add=h(`<div class="card hl"><h2>Ny påminnelse eller sak att göra</h2>
+    <label>Säg eller skriv<textarea id="aIn" placeholder="${AREA[a].ex}"></textarea></label>
+    <div class="grid2"><label>Datum<input type="date" id="aD"></label><label>Tid<input type="time" id="aT"></label></div>
+    <div class="row"><button class="btn" id="aAdd">Spara</button><button class="alt" id="aCal">Spara + Google Kalender</button></div>
+    <p class="note">Tryck på mikrofonen på tangentbordet för att prata in. ?Spara + Google Kalender? öppnar kalendern med allt ifyllt. Påminnelsen dagen före kommer om du har ställt in den (se Mer).</p></div>`);
+  app.appendChild(add);
+  const doAdd=cal=>{const text=$("aIn").value.trim();if(!text){toast("Skriv eller prata in något först.");return}
+    const t={id:uid(),text,datum:$("aD").value,tid:$("aT").value,klar:false};O.todo.push(t);save();
+    if(cal)window.open(gcal(t.text,t.datum,t.tid,AREA[a].t+" ? från Mina assistenter"),"_blank");toast("Sparat");render()};
+  $("aAdd").onclick=()=>doAdd(false);$("aCal").onclick=()=>doAdd(true);
+  const todo=O.todo.filter(t=>!t.klar).sort((x,y)=>((x.datum||"9999")+(x.tid||"")).localeCompare((y.datum||"9999")+(y.tid||"")));
+  const c=h(`<div class="card"><h2>Att göra</h2><ul class="list"></ul></div>`);app.appendChild(c);
+  const ul=c.querySelector("ul");if(!todo.length)ul.innerHTML='<li class="note">Inget just nu.</li>';todo.forEach(t=>ul.appendChild(todoLi(a,t)));
+  const done=O.todo.filter(t=>t.klar);
+  if(done.length){const dd=h(`<details class="card"><summary>Klart (${done.length})</summary><ul class="list"></ul></details>`);app.appendChild(dd);
+    done.slice(-15).reverse().forEach(t=>{const li=document.createElement("li");li.innerHTML=`<span class="t" style="text-decoration:line-through;color:var(--muted)">${esc(t.text)}</span><button class="ic">Ångra</button>`;li.querySelector("button").onclick=()=>{t.klar=false;save();render()};dd.querySelector("ul").appendChild(li)})}
+  // Fakta
+  const f=h(`<div class="card"><h2>Bra att veta</h2><ul class="list" id="fl"></ul>
+    <div class="row" style="flex-wrap:nowrap"><input id="fIn" placeholder="Ny fakta, t.ex. telefonnummer"><button class="btn" id="fAdd">Lägg till</button></div></div>`);app.appendChild(f);
+  const fl=f.querySelector("#fl");if(!O.fakta.length)fl.innerHTML='<li class="note">Inget sparat.</li>';
+  O.fakta.forEach((x,i)=>{const li=document.createElement("li");li.innerHTML=`<span class="t">${linkify(x)}</span><button class="x" aria-label="Ta bort">×</button>`;
+    li.querySelector(".x").onclick=()=>{if(confirm("Ta bort?")){O.fakta.splice(i,1);save();render()}};fl.appendChild(li)});
+  $("fAdd").onclick=()=>{const v=$("fIn").value.trim();if(!v)return;O.fakta.push(v);save();render()};
+  // Gemini
+  const g=h(`<div class="card"><h2>Fråga Gemini</h2><label>Din fråga<textarea id="gIn" placeholder="t.ex. Vad ska jag fråga verkstaden?"></textarea></label><button class="alt" id="gGo">Kopiera med fakta och öppna Gemini</button></div>`);app.appendChild(g);
+  $("gGo").onclick=()=>{const q=$("gIn").value.trim();if(!q){toast("Skriv en fråga.");return}
+    gemini(STYLE+"\n\nOMRÅDE: "+AREA[a].t+"\nFAKTA:\n- "+O.fakta.join("\n- ")+"\nÖPPNA SAKER:\n- "+O.todo.filter(t=>!t.klar).map(t=>t.text+(t.datum?" ("+t.datum+")":"")).join("\n- ")+"\n\nFRÅGA: "+q)};
+}
+function linkify(s){return esc(s).replace(/(\+?\d[\d\s-]{6,}\d)/g,m=>`<a href="tel:${m.replace(/[\s-]/g,"")}">${m}</a>`).replace(/([\w.+-]+@[\w-]+\.[\w.]+)/g,'<a href="mailto:$1">$1</a>')}
+const STYLE="Svara på svenska, kort och rakt, korta vanliga meningar. Skilj fakta från antaganden. Hitta aldrig på priser, datum eller adresser. Säg när något måste kollas live.";
+
+/* ===== Kalender ===== */
+function pKal(app){
+  app.appendChild(h(`<div class="card hl"><h2>Fota familjekalendern</h2>
+    <ol class="steps"><li>Tryck på knappen. Instruktionen kopieras och Gemini öppnas.</li><li>I Gemini: tryck på <b>+</b> och ta ett foto av kalendern.</li><li>Håll fingret i textfältet, välj <b>Klistra in</b> och skicka.</li><li>Gemini listar händelserna och lägger in dem i Google Kalender när du säger ja.</li></ol>
+    <button class="btn" id="kFoto">Kopiera instruktion och öppna Gemini</button></div>`));
+  $("kFoto").onclick=()=>gemini(`Bilden är vår familjekalender (handskriven). Familjen: ${N("jag")}, ${N("partner")}, ${N("barn1")} och ${N("barn2")}. Dagens datum är ${TODAY}.
+1. Läs av alla händelser från i dag och framåt. Lista dem kort: datum, tid, vad, vem.
+2. Markera det du är osäker på med (?) och fråga mig om det.
+3. När jag svarar ja: lägg in varje händelse i min Google Kalender med en påminnelse dagen före kl. 18 och en en timme innan. Saknas tid: heldag med påminnelse dagen före.
+Svara på svenska, kort.`);
+  const c=h(`<div class="card"><h2>Lägg in en händelse själv</h2>
+    <label>Vad<input id="kV" placeholder="t.ex. Matheo kalas hos Elsa"></label>
+    <div class="grid2"><label>Datum<input type="date" id="kD"></label><label>Tid<input type="time" id="kT"></label></div>
+    <button class="btn" id="kAdd">Öppna i Google Kalender</button></div>`);app.appendChild(c);
+  $("kAdd").onclick=()=>{const v=$("kV").value.trim();if(!v||!$("kD").value){toast("Fyll i vad och datum.");return}window.open(gcal(v,$("kD").value,$("kT").value,"Från familjekalendern"),"_blank")};
+  app.appendChild(h(`<div class="card"><h2>Påminnelse dagen före ? ställ in en gång</h2>
+    <ol class="steps"><li>Öppna Google Kalender ? meny ? ? <b>Inställningar</b>.</li><li>Välj ditt konto (den kalender du lägger in i).</li><li><b>Händelser</b> ? Standardaviseringar ? <b>1 dag före</b>. <b>Heldagshändelser</b> ? <b>Dagen före kl. 18:00</b>.</li></ol>
+    <p class="note">Då får allt du lägger in härifrån påminnelse dagen före automatiskt.</p><a class="alt" href="https://calendar.google.com/" target="_blank" rel="noopener">Öppna Google Kalender</a></div>`));
+}
+
+/* ===== Mejl ===== */
+function pMejl(app){
+  const opts=D.kontakter.map(k=>`<option value="${esc(k.namn)}">`).join("");
+  app.appendChild(h(`<div class="card hl"><h2>Prata in ett mejl</h2>
+    <label>Till (namn eller adress)<input id="mTo" list="kl" placeholder="Välj eller skriv"><datalist id="kl">${opts}</datalist></label>
+    <label>Vad ska mejlet säga?<textarea id="mIn" style="min-height:130px" placeholder="Tryck på mikrofonen och prata fritt"></textarea></label>
+    <label>Ton<select id="mTon"><option>Kort och vänlig</option><option>Formell</option><option>Bestämd men artig</option></select></label>
+    <button class="btn" id="mGo">Gör utkast i Gemini</button>
+    <p class="note">Gemini skriver utkastet. Kopiera det och klistra in i Outlook eller Gmail.</p></div>`));
+  $("mGo").onclick=()=>{const to=$("mTo").value.trim(),q=$("mIn").value.trim();if(!q){toast("Prata in vad mejlet ska säga.");return}
+    const k=D.kontakter.find(k=>k.namn===to);const lang=k&&k.sprak?k.sprak:"";
+    gemini(`Skriv ett mejlutkast åt mig, ${N("jag")}.
+Mottagare: ${to||"(okänd)"}${k&&k.epost?" <"+k.epost+">":""}${k&&k.info?" ? "+k.info:""}
+Språk: ${lang||"svenska om inget annat framgår"}. Ton: ${$("mTon").value}.
+Min instruktion (inpratad, kan innehålla talfel ? tolka rimligt): "${q}"
+Regler: korta vanliga meningar, inga utsmyckningar, inget överdrivet tack. Svenska korta mejl slutar "Mvh/${N("jag")}". Formellare svenska mejl: löptext och två tomrader före avslut. Bosniska/kroatiska/serbiska: formellt vi/ste, vam/vas med liten bokstav, avslut "Pozdrav," ny rad "${N("jag")}". Hitta aldrig på priser, datum eller adresser ? skriv [kolla] där något saknas.
+Svara med: Ämne: ? och sedan mejltexten. Inget annat.`)};
+  const c=h(`<div class="card"><h2>Kontakter</h2><ul class="list" id="kList"></ul>
+    <details><summary>Lägg till kontakt</summary><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+    <input id="kN" placeholder="Namn"><input id="kE" type="email" placeholder="E-post"><input id="kS" placeholder="Språk (t.ex. bosniska)"><input id="kI" placeholder="Om personen/företaget">
+    <button class="btn" id="kAddB">Spara kontakt</button></div></details></div>`);app.appendChild(c);
+  const ul=c.querySelector("#kList");if(!D.kontakter.length)ul.innerHTML='<li class="note">Inga kontakter.</li>';
+  D.kontakter.forEach((k,i)=>{const li=document.createElement("li");li.innerHTML=`<span class="t"><b>${esc(k.namn)}</b><span class="d">${linkify(k.epost||"")}${k.sprak?" · "+esc(k.sprak):""}${k.info?" · "+esc(k.info):""}</span></span><button class="ic">Välj</button><button class="x" aria-label="Ta bort">×</button>`;
+    li.querySelector(".ic").onclick=()=>{$("mTo").value=k.namn;window.scrollTo(0,0)};
+    li.querySelector(".x").onclick=()=>{if(confirm("Ta bort "+k.namn+"?")){D.kontakter.splice(i,1);save();render()}};ul.appendChild(li)});
+  $("kAddB").onclick=()=>{const n=$("kN").value.trim();if(!n)return;D.kontakter.push({namn:n,epost:$("kE").value.trim(),sprak:$("kS").value.trim(),info:$("kI").value.trim()});save();render()};
+}
+
+/* ===== Köp ===== */
+function pKop(app){
+  app.appendChild(h(`<div class="card hl"><h2>Gratis bevakningar som sköter sig själva</h2>
+    <ol class="steps"><li><b>Blocket</b>: sök, tryck <b>Spara sökning</b> ? notis vid nya annonser.</li><li><b>Tradera</b>: sök, tryck <b>Bevaka sökning</b>.</li><li><b>Prisjakt</b>: öppna produkten ? <b>Prisbevakning</b> med ditt maxpris.</li></ol>
+    <p class="note">Knapparna nedan öppnar rätt sökning direkt.</p></div>`));
+  const c=h(`<div class="card"><h2>Önskelista</h2><ul class="list" id="wl"></ul>
+    <details><summary>Lägg till</summary><div style="display:flex;flex-direction:column;gap:8px;margin-top:8px"><input id="wN" placeholder="Sökord, t.ex. ThinkPad T14 Gen 3"><input id="wK" placeholder="Krav och maxpris"><button class="btn" id="wAdd">Spara</button></div></details></div>`);app.appendChild(c);
+  const ul=c.querySelector("#wl");const L=D.onskelista.filter(w=>!w.klar);if(!L.length)ul.innerHTML='<li class="note">Tom lista.</li>';
+  L.forEach(w=>{const q=encodeURIComponent(w.sok||w.namn);const li=document.createElement("li");
+    li.innerHTML=`<input type="checkbox" aria-label="Köpt"><span class="t"><b>${esc(w.namn)}</b><span class="d">${esc(w.krav||"")}</span>
+    <span class="row" style="margin-top:6px"><a class="ic" target="_blank" rel="noopener" href="https://www.blocket.se/annonser/hela_sverige?q=${q}">Blocket</a><a class="ic" target="_blank" rel="noopener" href="https://www.tradera.com/search?q=${q}">Tradera</a><a class="ic" target="_blank" rel="noopener" href="https://www.prisjakt.nu/search?search=${q}">Prisjakt</a><button class="ic" data-g>Gemini</button></span></span>`;
+    li.querySelector("input").onchange=()=>{w.klar=true;save();toast("Markerad som köpt");render()};
+    li.querySelector("[data-g]").onclick=()=>gemini(STYLE+`\n\nJag letar efter: ${w.namn}. Krav: ${w.krav||"-"}. Bor i Örebro. Sök på webben: begagnat på Blocket/Tradera (Örebro/Närke först) och nytt via Prisjakt. Kolla att annonsen är aktiv eller varan i lager, totalpris inkl. frakt och verkligt normalpris. Ge 3 alternativ rangordnade med pris och länk.`);
+    ul.appendChild(li)});
+  $("wAdd").onclick=()=>{const n=$("wN").value.trim();if(!n)return;D.onskelista.push({id:uid(),namn:n,krav:$("wK").value.trim(),klar:false});save();render()};
+}
+
+/* ===== Småhandlingar ===== */
+const START=new Date(2026,10,9);
+const WEEKS=[
+ {t:"Lugn först",w:"Barnet lugnar sig lättare när föräldern är lugn.",d:["Kolla att pulsklockan är på. Öva tre långa utandningar tre gånger i dag.","Påklädning: börja tio minuter tidigare. Halv volym.","Byt tanke: ?Hen är liten och överväldigad, inte elak.?","Mjuka händer: långsamt, öppen hand, säg vad du gör.","Lägg märke till var i kroppen ilskan börjar.","Helgmorgon: ingen kritik första halvtimmen. En vänlig sak till {P} före kl. 9.","Söndagsreflektion i kväll."]},
+ {t:"Positiv uppmärksamhet",w:"Uppmärksamhet förstärker det den riktas mot.",d:["Barnstund 10 minuter där {B1} leder.","Fem beskrivande beröm före lunch.","Barnstund. Ignorera ofarligt gnäll, beröm när det slutar.","Fånga {B1} när hen är snäll mot {B2}.","Barnstund med något taktilt.","Fem positiva per tillsägelse.","Söndagsreflektion i kväll."]},
+ {t:"Tydlighet och övergångar",w:"Korta positiva instruktioner och förvarningar ger färre konflikter.",d:["En instruktion i taget. Nära och lugnt.","Förvarna övergångar med timer.","Ge två val.","När?då i bilen. Motorn av tills bältet sitter.","Bildschema för morgonen.","Lugn kort konsekvens som är bestämd i förväg. Aldrig fysiskt.","Söndagsreflektion i kväll."]},
+ {t:"Säkerhet, reparation och paret",w:"Skydda först, prata sen.",d:["Någon får ont: kliv emellan, ta hand om den skadade. ?Jag stoppar dig. Jag hjälper dig.?","Reparera samma dag, utan ?men?.","En vuxen i taget med {P}. Bestäm en signal för att byta.","Mjuk start: ?Jag är trött, jag behöver ??","Vid stark affekt: färre ord, lugn plats inne, var nära.","Uppskattning till {P}, högt.","Söndagsreflektion i kväll. Samla till terapeuten."]}];
+const sub=s=>s.replace(/\{B1\}/g,N("barn1")).replace(/\{B2\}/g,N("barn2")).replace(/\{P\}/g,N("partner"));
+function smhToday(){const days=Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-START)/864e5);const idx=((days%28)+28)%28,w=WEEKS[Math.floor(idx/7)];
+  return {theme:"Vecka "+(Math.floor(idx/7)+1)+" ? "+w.t,ex:sub(w.d[idx%7]),why:w.w}}
+let smhTab=null;
+function pSmh(app){
+  if(!smhTab){const hr=now.getHours();smhTab=hr>=20?"logg":(hr>=11&&hr<13?"stopp":"idag")}
+  const tabs=[["idag","I dag"],["kaos","Kaos nu"],["stopp","STOPP"],["logg","Kvällslogg"],["hist","Historik"]];
+  const ch=h(`<div class="chips" role="tablist">${tabs.map(([k,n])=>`<button role="tab" data-t="${k}" aria-selected="${k===smhTab}">${n}</button>`).join("")}</div>`);app.appendChild(ch);
+  ch.querySelectorAll("button").forEach(b=>b.onclick=()=>{smhTab=b.dataset.t;render()});
+  ({idag:smhIdag,kaos:smhKaos,stopp:smhStopp,logg:smhLogg,hist:smhHist})[smhTab](app)}
+function smhIdag(app){const e=smhToday();
+  app.appendChild(h(`<div class="card hl"><span class="theme">${esc(e.theme)}</span><span class="big">${esc(e.ex)}</span><p class="sub">Varför: ${esc(e.why)}</p></div>`));
+  app.appendChild(h(`<div class="card"><h2>Kärnan</h2><ol class="steps">
+   <li>Skydda först. Aldrig straffa med händerna.</li><li>Mjuka händer: långsamt, öppen hand, säg vad du gör. Aldrig rycka eller ta gosedjuret.</li><li>Halv volym, halvt tempo.</li>
+   <li>Säg ?jag är trött? till ${esc(N("partner"))} innan det blir kritik.</li><li>En vuxen i taget med ${esc(N("barn1"))}. Den andra tar ${esc(N("barn2"))}.</li>
+   <li>Mitt i kaos: få ord, sänk krav, var nära. Prata efteråt.</li><li>Pulsklocka över 95: långsam andning, promenad. Beröm.</li></ol></div>`));
+  const y=new Date(now);y.setDate(y.getDate()-1);
+  if(!D.logg.some(l=>l.datum===iso(y))){const c=h(`<div class="card warn"><p class="ok" style="color:var(--red)">Gårdagens kvällslogg saknas. Fem minuter räcker.</p><button class="alt">Skriv den nu</button></div>`);c.querySelector("button").onclick=()=>{smhTab="logg";render()};app.appendChild(c)}}
+function smhKaos(app){
+  app.appendChild(h(`<div class="card warn"><h2>Mitt i kaoset</h2><ol class="steps">
+   <li><b>Skydda.</b> Kliv emellan. Ta hand om den som fått ont.</li><li><b>Säg:</b> ?Jag stoppar dig. Jag hjälper dig.?</li><li><b>Händerna stilla.</b> Tre långa utandningar.</li>
+   <li><b>Få ord.</b> Inga regler nu. Var nära.</li><li><b>Byt av.</b> Tappar du det: lämna över till ${esc(N("partner"))}, eller ta ${esc(N("barn2"))} och gå ut.</li><li><b>Efteråt:</b> reparera samma dag, utan ?men?.</li></ol>
+   <p class="note">Barn i fara: ring <a href="tel:112">112</a>. Råd om föräldraskap: <a href="tel:1177">1177</a> eller kommunens föräldrastöd.</p></div>`));
+  app.appendChild(h(`<div class="card"><h2>Fråga Gemini</h2><label>Vad händer just nu?<textarea id="kIn" placeholder="Prata in kort"></textarea></label><button class="btn" id="kGo">Kopiera och öppna Gemini</button></div>`));
+  $("kGo").onclick=()=>{const t=$("kIn").value.trim();if(!t){toast("Skriv kort vad som händer.");return}gemini(smhCtx()+"\n\nJust nu: "+t+"\n\nVad gör och säger jag de närmaste minuterna?")}}
+function smhCtx(){return `Jag är pappa till ${N("barn1")} (förskolebarn, aktiv, taktil, starka känslor vid nej och övergångar) och ${N("barn2")} (småbarn). Min partner heter ${N("partner")}. Jag jobbar med föräldraträning (Komet/PCIT), samreglering och Gottman. Mina regler: skydda först, aldrig straffa med händerna, mjuka händer, halv volym, få ord i kaos, reparera samma dag. Svara på svenska, kort, med ett konkret manus jag kan säga. Föreslå aldrig fasthållning, slag eller isolering som straff.`}
+function smhStopp(app){
+  app.appendChild(h(`<div class="card"><h2>2 minuter STOPP</h2><p>Tre långa utandningar. Händerna stilla. Pulsklockan på.</p>
+   <label>Hur laddad är du nu?<input type="range" id="sL" min="0" max="10" value="5"></label><p class="num" id="sV">5</p>
+   <label>Eftermiddagens svåra stund<input id="sS" placeholder="t.ex. hämtningen, middagen"></label>
+   <label>Din enda mening där<input id="sM" placeholder="?Jag hjälper dig. Vi går tillsammans.?"></label>
+   <button class="btn" id="sSave">Spara</button></div>`));
+  $("sL").oninput=()=>$("sV").textContent=$("sL").value;
+  $("sSave").onclick=()=>{D.stopp.push({datum:TODAY,tid:new Date().toTimeString().slice(0,5),laddning:+$("sL").value,svar:$("sS").value.trim(),mening:$("sM").value.trim()});save();toast("Sparat");render()}}
+function smhLogg(app){
+  const c=h(`<div class="card"><h2 id="lT">Kvällslogg, 5 minuter</h2><p class="note" id="lH"></p>
+   <label>Datum<input type="date" id="lD" value="${TODAY}"></label>
+   <div id="lV"><label>Vad hände precis innan?<textarea id="l1"></textarea></label><label>Vad låg runt omkring? (sömn, hunger, tidspress, övergång, ljud, vem som var där)<textarea id="l2"></textarea></label><label>Vad gjorde du?<textarea id="l3"></textarea></label><label>Vad hade du velat göra?<textarea id="l4"></textarea></label></div>
+   <div id="lS" hidden><label>Vilken pappa och partner vill jag vara?<textarea id="s1"></textarea></label><label>Vad var svårast den här veckan?<textarea id="s2"></textarea></label><label>Vad tar jag med till terapeuten?<textarea id="s3"></textarea></label></div>
+   <label>Något som gick bra i dag<textarea id="l5"></textarea></label><label>Behövs en reparation i morgon?<input id="l6" placeholder="Vad säger du?"></label>
+   <button class="btn" id="lSave">Spara loggen</button></div>`);app.appendChild(c);
+  const sw=()=>{const s=new Date($("lD").value+"T12:00").getDay()===0;$("lV").hidden=s;$("lS").hidden=!s;$("lT").textContent=s?"Söndagsreflektion, ca 15 minuter":"Kvällslogg, 5 minuter";$("lH").textContent=s?"Se tillbaka på veckan.":"En stund som inte gick bra. Inpratat räcker."};
+  $("lD").onchange=sw;sw();
+  $("lSave").onclick=()=>{const e={datum:$("lD").value};["l1","l2","l3","l4","l5","l6","s1","s2","s3"].forEach(k=>{const v=$(k).value.trim();if(v)e[k]=v});
+    if(Object.keys(e).length<2){toast("Skriv något först.");return}D.logg.push(e);D.logg.sort((a,b)=>b.datum.localeCompare(a.datum));save();toast("Sparat. Lägg dig i tid.");smhTab="idag";render()}}
+const LBL={l1:"Vad hände",l2:"Runt omkring",l3:"Jag gjorde",l4:"Hade velat",l5:"Gick bra",l6:"Reparation",s1:"Vill vara",s2:"Svårast",s3:"Till terapeuten",fri:"Övrigt"};
+function logText(n){let t="";D.logg.slice(0,n||999).forEach(e=>{t+=e.datum+"\n";for(const k in LBL)if(e[k])t+=LBL[k]+": "+e[k]+"\n";t+="\n"});
+  if(D.stopp.length){t+="STOPP (laddning 0?10):\n";D.stopp.slice(-30).forEach(s=>t+=s.datum+" "+s.tid+": "+s.laddning+(s.svar?" ? "+s.svar:"")+(s.mening?" ? ?"+s.mening+"?":"")+"\n")}return t.trim()}
+function smhHist(app){
+  app.appendChild(h(`<div class="card"><h2>Underlag till terapeuten</h2><div class="row"><button class="alt" id="hC">Kopiera allt</button><button class="alt" id="hG">Sammanfatta veckan i Gemini</button></div></div>`));
+  $("hC").onclick=async()=>{if(await copy(logText()))toast("Kopierat")};
+  $("hG").onclick=()=>gemini(smhCtx()+"\n\nHär är mina senaste loggar. Sammanfatta mönster, vad som gått bra och tre saker att ta med till min terapeut. Kort.\n\n"+logText(7));
+  const c=h(`<div class="card"></div>`);app.appendChild(c);if(!D.logg.length)c.innerHTML='<p class="note">Inga loggar ännu.</p>';
+  D.logg.forEach((e,i)=>{const d=document.createElement("div");d.className="entry";d.innerHTML=`<b>${esc(fmtDate(e.datum))}</b>`+Object.keys(LBL).filter(k=>e[k]).map(k=>`<p><b>${LBL[k]}:</b> ${esc(e[k])}</p>`).join("")+`<button class="x" style="align-self:flex-start;font-size:.82rem;text-decoration:underline">Ta bort</button>`;
+    d.querySelector("button").onclick=()=>{if(confirm("Ta bort loggen för "+e.datum+"?")){D.logg.splice(i,1);save();render()}};c.appendChild(d)})}
+
+/* ===== Mer ===== */
+function pMer(app){
+  pArea("arenden",app);
+  app.appendChild(h(`<div class="card"><h2>Mina uppgifter</h2>
+    <p class="note">Allt sparas bara i den här telefonen, inte på nätet. Spara en säkerhetskopia ibland, t.ex. i Google Drive.</p>
+    <div class="row"><button class="btn" id="imp">Hämta in fil</button><button class="alt" id="exp">Spara säkerhetskopia</button></div>
+    <input type="file" id="impF" accept=".json,application/json" hidden>
+    <details><summary>Namn</summary><div class="grid2" style="margin-top:8px"><input id="nJ" placeholder="Jag" value="${esc(D.namn.jag)}"><input id="nP" placeholder="Partner" value="${esc(D.namn.partner)}"><input id="nB1" placeholder="Barn 1" value="${esc(D.namn.barn1)}"><input id="nB2" placeholder="Barn 2" value="${esc(D.namn.barn2)}"></div><button class="btn small" id="nSave" style="margin-top:8px">Spara namn</button></details></div>`));
+  $("imp").onclick=()=>$("impF").click();
+  $("impF").onchange=async()=>{const f=$("impF").files[0];if(!f)return;try{const d=JSON.parse(await f.text());importData(d);save();toast("Inhämtat");render()}catch(_){toast("Filen gick inte att läsa.")}};
+  $("exp").onclick=()=>{const b=new Blob([JSON.stringify(D,null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="mina-assistenter-"+TODAY+".json";a.click()};
+  $("nSave").onclick=()=>{D.namn={jag:$("nJ").value.trim(),partner:$("nP").value.trim(),barn1:$("nB1").value.trim(),barn2:$("nB2").value.trim()};save();toast("Sparat")};
+}
+function importData(d){
+  const key=o=>JSON.stringify(o);
+  if(d.namn)for(const k in d.namn)if(d.namn[k])D.namn[k]=d.namn[k];
+  if(d.omr)for(const a in d.omr){D.omr[a]=D.omr[a]||{fakta:[],todo:[]};const O=D.omr[a],I=d.omr[a];
+    (I.fakta||[]).forEach(f=>{if(!O.fakta.includes(f))O.fakta.push(f)});
+    (I.todo||[]).forEach(t=>{if(!O.todo.some(x=>x.text===t.text&&x.datum===t.datum))O.todo.push({id:uid(),klar:false,...t})})}
+  (d.kontakter||[]).forEach(k=>{if(!D.kontakter.some(x=>x.namn===k.namn))D.kontakter.push(k)});
+  (d.onskelista||[]).forEach(w=>{if(!D.onskelista.some(x=>x.namn===w.namn))D.onskelista.push({id:uid(),klar:false,...w})});
+  const hl=new Set(D.logg.map(key));(d.logg||[]).forEach(e=>{if(e&&e.datum&&!hl.has(key(e)))D.logg.push(e)});D.logg.sort((a,b)=>b.datum.localeCompare(a.datum));
+  const hs=new Set(D.stopp.map(key));(d.stopp||[]).forEach(e=>{if(!hs.has(key(e)))D.stopp.push(e)});
+}
+render();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>

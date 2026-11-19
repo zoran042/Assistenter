@@ -1,0 +1,1 @@
+<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>Gmail - nedladdningsfel</title></head><body>Av säkerhetsskäl kan du inte använda denna filtyp i Gmail eftersom den bryter mot Googles policy för körbara filer och arkiv.</body></html>
