@@ -1,1 +1,5 @@
-<html><head><meta content="text/html; charset=UTF-8" http-equiv="content-type"><title>Gmail - nedladdningsfel</title></head><body>Av säkerhetsskäl kan du inte använda denna filtyp i Gmail eftersom den bryter mot Googles policy för körbara filer och arkiv.</body></html>
+const C="za-v2";const F=["./","index.html","manifest.json","icon.svg"];
+self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(F)));self.skipWaiting()});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))));self.clients.claim()});
+self.addEventListener("fetch",e=>{if(e.request.method!=="GET"||!e.request.url.startsWith(self.location.origin))return;
+ e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(C).then(x=>x.put(e.request,c));return r}).catch(()=>caches.match(e.request)))});
